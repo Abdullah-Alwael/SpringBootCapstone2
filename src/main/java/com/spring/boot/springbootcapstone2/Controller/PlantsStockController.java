@@ -58,4 +58,41 @@ public class PlantsStockController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("PlantStock deleted successfully"));
 
     }
+
+    // Extra #1
+    @GetMapping("filter/plants/in-stock/{farmerId}")
+    public ResponseEntity<?> getInStockPlants(@PathVariable Integer farmerId){
+        return ResponseEntity.status(HttpStatus.OK).body(plantsStockService.getAllAvailablePlants(farmerId));
+    }
+
+    // Extra #2
+    @GetMapping("filter/plants/out-of-stock/{farmerId}")
+    public ResponseEntity<?> getOutOfStockPlants(@PathVariable Integer farmerId){
+        return ResponseEntity.status(HttpStatus.OK).body(plantsStockService.getAllUnavailablePlants(farmerId));
+    }
+
+    // Extra $3
+    @PutMapping("/increase-stock/{farmerId}/{plantId}/{stockAmount}")
+    public ResponseEntity<?> increaseStock(
+            @PathVariable Integer farmerId,
+            @PathVariable Integer plantId,
+            @PathVariable Integer stockAmount){
+
+        plantsStockService.increaseStock(farmerId,plantId,stockAmount);
+        return ResponseEntity.status(HttpStatus.OK).body(new
+                ApiResponse("Stock increased by "+stockAmount+" successfully"));
+    }
+
+    // Extra $4
+    @PutMapping("/decrease-stock/{farmerId}/{plantId}/{stockAmount}")
+    public ResponseEntity<?> decreaseStock(
+            @PathVariable Integer farmerId,
+            @PathVariable Integer plantId,
+            @PathVariable Integer stockAmount){
+
+        plantsStockService.decreaseStock(farmerId,plantId,stockAmount);
+        return ResponseEntity.status(HttpStatus.OK).body(new
+                ApiResponse("Stock decreased by "+stockAmount+" successfully"));
+    }
+
 }

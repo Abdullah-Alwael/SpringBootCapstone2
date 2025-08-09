@@ -22,6 +22,10 @@ public class PlantsService {
         return plantsRepository.findAll();
     }
 
+    public Plants getPlant(Integer plantId){
+        return plantsRepository.findPlantsById(plantId);
+    }
+
     public void updatePlant(Integer plantId, Plants plant){
         Plants oldPlant = plantsRepository.findPlantsById(plantId);
 

@@ -1,11 +1,11 @@
 package com.spring.boot.springbootcapstone2.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -20,10 +20,13 @@ public class Orders {
 
     @NotNull(message = "date should not be empty")
     @Column(columnDefinition = "datetime not null")
+    @CreationTimestamp
     private LocalDateTime date;
 
     @NotEmpty(message = "status should not be empty")
     @Column(columnDefinition = "varchar(30) not null")
+    @Pattern(regexp = "^(pending|confirmed|delivered|canceled)$",
+            message = "must be one of: pending|confirmed|delivered|canceled")
     private String status;
 
     @NotNull(message = "buyerId should not be empty")
@@ -35,6 +38,7 @@ public class Orders {
     private Integer farmerId;
 
     @NotNull(message = "totalAmount should not be empty")
+    @PositiveOrZero(message = "totalAmount must be positive or zero")
     @Column(columnDefinition = "double not null")
     private Double totalAmount;
 
