@@ -44,4 +44,8 @@ public class PlantsService {
 
         plantsRepository.delete(oldPlant);
     }
+
+    public Boolean doesNotExist(Integer plantId){
+        return !plantsRepository.existsById(plantId);
+    }
 }

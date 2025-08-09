@@ -46,5 +46,8 @@ public class BuyersService {
        buyersRepository.delete(oldBuyer);
     }
 
+    public Boolean doesNotExist(Integer buyerId){
+        return !buyersRepository.existsById(buyerId);
+    }
 
 }

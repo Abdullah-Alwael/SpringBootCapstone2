@@ -47,4 +47,8 @@ public class FarmersService {
 
         farmersRepository.delete(oldFarmer);
     }
+
+    public Boolean doesNotExist(Integer farmerId){
+        return !farmersRepository.existsById(farmerId);
+    }
 }

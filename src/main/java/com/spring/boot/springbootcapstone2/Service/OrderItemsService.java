@@ -13,7 +13,20 @@ import java.util.List;
 public class OrderItemsService {
     private final OrderItemsRepository orderItemsRepository;
 
+    // for checking the iDs existence:
+    private final PlantsService plantsService;
+    private final OrdersService ordersService;
+
     public void addOrderItem(OrderItems orderItem){
+        if (plantsService.doesNotExist(orderItem.getPlantId())){
+            throw new ApiException("Error, plant does not exist");
+        }
+
+        if (ordersService.doesNotExist(orderItem.getOrderId())){
+            throw new ApiException("Error, order does not exist");
+        }
+
+
         orderItemsRepository.save(orderItem);
     }
 
@@ -22,6 +35,14 @@ public class OrderItemsService {
     }
 
     public void updateOrderItem(Integer orderItemId, OrderItems orderItem){
+        if (plantsService.doesNotExist(orderItem.getPlantId())){
+            throw new ApiException("Error, plant does not exist");
+        }
+
+        if (ordersService.doesNotExist(orderItem.getOrderId())){
+            throw new ApiException("Error, order does not exist");
+        }
+
         OrderItems oldOrderItem = orderItemsRepository.findOrderItemsById(orderItemId);
 
         if (oldOrderItem == null){

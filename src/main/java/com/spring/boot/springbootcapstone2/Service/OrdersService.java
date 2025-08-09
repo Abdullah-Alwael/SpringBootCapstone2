@@ -13,7 +13,19 @@ import java.util.List;
 public class OrdersService {
     private final OrdersRepository ordersRepository;
 
+    // for checking iDs existence:
+    private final FarmersService farmersService;
+    private final BuyersService buyersService;
+
     public void addOrder(Orders order){
+        if (farmersService.doesNotExist(order.getFarmerId())){
+            throw new ApiException("Error, farmer does not exist");
+        }
+
+        if (buyersService.doesNotExist(order.getBuyerId())){
+            throw new ApiException("Error, buyer does not exist");
+        }
+
         ordersRepository.save(order);
     }
 
@@ -22,6 +34,14 @@ public class OrdersService {
     }
 
     public void updateOrder(Integer orderId, Orders order){
+        if (farmersService.doesNotExist(order.getFarmerId())){
+            throw new ApiException("Error, farmer does not exist");
+        }
+
+        if (buyersService.doesNotExist(order.getBuyerId())){
+            throw new ApiException("Error, buyer does not exist");
+        }
+
         Orders oldOrder = ordersRepository.findOrdersById(orderId);
 
         if (oldOrder == null){
@@ -45,5 +65,9 @@ public class OrdersService {
         }
 
         ordersRepository.delete(oldOrder);
+    }
+
+    public Boolean doesNotExist(Integer orderId){
+        return !ordersRepository.existsById(orderId);
     }
 }

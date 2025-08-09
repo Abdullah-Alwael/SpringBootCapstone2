@@ -14,7 +14,19 @@ public class PlantsStockService {
 
     private final PlantsStockRepository plantStocksRepository;
 
+    // for checking the iDs existence:
+    private final FarmersService farmersService;
+    private final PlantsService plantsService;
+
     public void addPlantStock(PlantsStock plantStock){
+        if (farmersService.doesNotExist(plantStock.getFarmerId())){
+            throw new ApiException("Error, farmer does not exist");
+        }
+
+        if (plantsService.doesNotExist(plantStock.getPlantId())){
+            throw new ApiException("Error, plant does not exist");
+        }
+
         plantStocksRepository.save(plantStock);
     }
 
@@ -23,6 +35,14 @@ public class PlantsStockService {
     }
 
     public void updatePlantStock(Integer plantStockId, PlantsStock plantStock){
+        if (farmersService.doesNotExist(plantStock.getFarmerId())){
+            throw new ApiException("Error, farmer does not exist");
+        }
+
+        if (plantsService.doesNotExist(plantStock.getPlantId())){
+            throw new ApiException("Error, plant does not exist");
+        }
+
         PlantsStock oldPlantStock = plantStocksRepository.findPlantsStockById(plantStockId);
 
         if (oldPlantStock == null){
