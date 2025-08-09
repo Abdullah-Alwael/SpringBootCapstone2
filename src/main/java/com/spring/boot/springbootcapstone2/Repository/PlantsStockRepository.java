@@ -18,4 +18,7 @@ public interface PlantsStockRepository extends JpaRepository<PlantsStock, Intege
     List<Integer> giveMeUnavailablePlantIds(Integer farmerId);
 
     PlantsStock findPlantsStockByFarmerIdAndPlantId(Integer farmerId, Integer plantId);
+
+    @Query("select ps.plantId from PlantsStock ps where  ps.farmerId=?1 and ps.price between ?2 and ?3")
+    List<Integer> giveMePlantIdsWithinPriceRange(Integer farmerId, Double min, Double max);
 }

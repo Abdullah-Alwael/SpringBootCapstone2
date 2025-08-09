@@ -71,7 +71,7 @@ public class PlantsStockController {
         return ResponseEntity.status(HttpStatus.OK).body(plantsStockService.getAllUnavailablePlants(farmerId));
     }
 
-    // Extra $3
+    // Extra #3
     @PutMapping("/increase-stock/{farmerId}/{plantId}/{stockAmount}")
     public ResponseEntity<?> increaseStock(
             @PathVariable Integer farmerId,
@@ -83,7 +83,7 @@ public class PlantsStockController {
                 ApiResponse("Stock increased by "+stockAmount+" successfully"));
     }
 
-    // Extra $4
+    // Extra #4
     @PutMapping("/decrease-stock/{farmerId}/{plantId}/{stockAmount}")
     public ResponseEntity<?> decreaseStock(
             @PathVariable Integer farmerId,
@@ -95,4 +95,13 @@ public class PlantsStockController {
                 ApiResponse("Stock decreased by "+stockAmount+" successfully"));
     }
 
+    // Extra #5
+    @GetMapping("/filter/price/between/{minPrice}/{maxPrice}/{farmerId}")
+    public ResponseEntity<?> getPlantsWithinPriceRange(@PathVariable Integer farmerId,
+                                                       @PathVariable Double minPrice,
+                                                       @PathVariable Double maxPrice){
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                plantsStockService.getPlantsWithinPriceRange(farmerId,minPrice,maxPrice));
+    }
 }

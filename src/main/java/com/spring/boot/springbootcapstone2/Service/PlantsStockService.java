@@ -145,4 +145,17 @@ public class PlantsStockService {
 
         plantStocksRepository.save(oldPlantStock);
     }
+
+    // Extra #5
+
+    public List<Plants> getPlantsWithinPriceRange(Integer farmerId, Double min, Double max){
+        List<Plants> plantsWithinRange = new ArrayList<>();
+
+        for (Integer id :plantStocksRepository.giveMePlantIdsWithinPriceRange(farmerId,min,max)) {
+            plantsWithinRange.add(plantsService.getPlant(id));
+        }
+
+        return plantsWithinRange;
+
+    }
 }
