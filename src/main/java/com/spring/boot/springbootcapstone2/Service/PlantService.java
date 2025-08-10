@@ -130,7 +130,7 @@ public class PlantService {
 
         if (oldPlant.getStockQuantity() - stockAmount < 0) {
             throw new ApiException("Error, can not decrease by "+stockAmount+
-                    " insufficient stock: "+ oldPlant.getStockQuantity());
+                    " insufficient stock: "+ oldPlant.getStockQuantity()+" for "+oldPlant.getName());
         }
 
         oldPlant.setStockQuantity(oldPlant.getStockQuantity() - stockAmount);
