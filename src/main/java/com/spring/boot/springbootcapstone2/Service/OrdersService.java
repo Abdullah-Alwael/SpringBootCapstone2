@@ -33,6 +33,10 @@ public class OrdersService {
         return ordersRepository.findAll();
     }
 
+    public Orders getOrder(Integer orderId){
+        return ordersRepository.findOrdersById(orderId);
+    }
+
     public void updateOrder(Integer orderId, Orders order){
         if (farmersService.doesNotExist(order.getFarmerId())){
             throw new ApiException("Error, farmer does not exist");
@@ -69,5 +73,14 @@ public class OrdersService {
 
     public Boolean doesNotExist(Integer orderId){
         return !ordersRepository.existsById(orderId);
+    }
+
+    // Extra 6
+    public List<Orders> pendingOrders(Integer farmerId){
+        return ordersRepository.findOrdersByStatusEqualsAndFarmerId("pending", farmerId);
+    }
+
+    public void save(Orders order){
+        ordersRepository.save(order);
     }
 }

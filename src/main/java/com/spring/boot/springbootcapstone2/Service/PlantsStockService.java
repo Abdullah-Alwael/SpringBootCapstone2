@@ -116,6 +116,13 @@ public class PlantsStockService {
         plantStocksRepository.save(oldPlantStock);
     }
 
+    // helper method
+    public Boolean stockAvailable(Integer farmerId, Integer plantId, Integer quantity){
+        PlantsStock oldPlantStock = plantStocksRepository.findPlantsStockByFarmerIdAndPlantId(farmerId, plantId);
+
+        return oldPlantStock.getStockQuantity() - quantity >= 0;
+    }
+
     // Extra #4
     public void decreaseStock(Integer farmerId, Integer plantId, Integer stockAmount) {
         if (stockAmount <= 0) {
