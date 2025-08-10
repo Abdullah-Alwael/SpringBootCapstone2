@@ -53,7 +53,7 @@ public class OrderService {
         }
 
         oldOrder.setStatus(order.getStatus());
-        oldOrder.setTotalAmount(order.getTotalAmount());
+        oldOrder.setTotalPrice(order.getTotalPrice());
         oldOrder.setDate(order.getDate());
         oldOrder.setBuyerId(order.getBuyerId());
         oldOrder.setFarmerId(order.getFarmerId());
@@ -85,7 +85,6 @@ public class OrderService {
     }
 
     // Extra #9: "^(pending|confirmed|delivered|canceled)$"
-
     public void markDelivered(Integer orderId, Integer farmerId){
         if (doesNotExist(orderId)){
             throw new ApiException("Error, order does not exist");

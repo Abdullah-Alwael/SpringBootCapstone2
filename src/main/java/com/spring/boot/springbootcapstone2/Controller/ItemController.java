@@ -59,6 +59,7 @@ public class ItemController {
 
     }
 
+    // Extra #7
     @PutMapping("/confirm/{orderId}/{farmerId}")
     public ResponseEntity<?> confirmOrder(@PathVariable Integer orderId, @PathVariable Integer farmerId){
         itemService.confirmOrder(orderId, farmerId);
@@ -67,6 +68,7 @@ public class ItemController {
                 ApiResponse("Order confirmed successfully and stock updated"));
     }
 
+    // Extra #8
     @PutMapping("/cancel/{orderId}/{farmerId}")
     public ResponseEntity<?> cancelOrder(@PathVariable Integer orderId, @PathVariable Integer farmerId){
         itemService.cancelOrder(orderId,farmerId);

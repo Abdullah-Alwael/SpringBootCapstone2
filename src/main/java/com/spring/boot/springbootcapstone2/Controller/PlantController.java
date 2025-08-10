@@ -61,24 +61,24 @@ public class PlantController {
 
     // Extra #1
     @GetMapping("filter/plants/in-stock/{farmerId}")
-    public ResponseEntity<?> getInPlants(@PathVariable Integer farmerId) {
+    public ResponseEntity<?> getInStockPlants(@PathVariable Integer farmerId) {
         return ResponseEntity.status(HttpStatus.OK).body(plantService.getAllAvailablePlants(farmerId));
     }
 
     // Extra #2
     @GetMapping("filter/plants/out-of-stock/{farmerId}")
-    public ResponseEntity<?> getOutOfPlants(@PathVariable Integer farmerId) {
+    public ResponseEntity<?> getOutOfStockPlants(@PathVariable Integer farmerId) {
         return ResponseEntity.status(HttpStatus.OK).body(plantService.getAllUnavailablePlants(farmerId));
     }
 
     // Extra #3
     @PutMapping("/increase-stock/{farmerId}/{plantId}/{stockAmount}")
-    public ResponseEntity<?> increase(
+    public ResponseEntity<?> increaseStock(
             @PathVariable Integer farmerId,
             @PathVariable Integer plantId,
             @PathVariable Integer stockAmount) {
 
-        plantService.increase(farmerId, plantId, stockAmount);
+        plantService.increaseStock(farmerId, plantId, stockAmount);
         return ResponseEntity.status(HttpStatus.OK).body(new
                 ApiResponse(" increased by " + stockAmount + " successfully"));
     }
@@ -90,7 +90,7 @@ public class PlantController {
             @PathVariable Integer plantId,
             @PathVariable Integer stockAmount) {
 
-        plantService.decrease(farmerId, plantId, stockAmount);
+        plantService.decreaseStock(farmerId, plantId, stockAmount);
         return ResponseEntity.status(HttpStatus.OK).body(new
                 ApiResponse(" decreased by " + stockAmount + " successfully"));
     }

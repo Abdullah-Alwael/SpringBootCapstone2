@@ -14,12 +14,10 @@ import java.util.List;
 public class ItemService {
     private final ItemRepository itemRepository;
 
-    // for checking the iDs existence:
+    // for manipulating the stock
+    // and checking the iDs existence:
     private final PlantService plantService;
     private final OrderService orderService;
-
-    // for manipulating the stock
-    private final PlantService plantService;
 
     public void addOrderItem(Item orderItem){
         if (plantService.doesNotExist(orderItem.getPlantId())){
@@ -56,7 +54,6 @@ public class ItemService {
         oldOrderItem.setOrderId(orderItem.getOrderId());
         oldOrderItem.setPlantId(orderItem.getPlantId());
         oldOrderItem.setQuantity(orderItem.getQuantity());
-        oldOrderItem.setPurchasePrice(orderItem.getPurchasePrice());
 
         itemRepository.save(oldOrderItem);
     }

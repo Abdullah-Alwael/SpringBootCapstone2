@@ -68,6 +68,11 @@ public class PlantService {
         plantRepository.delete(oldPlant);
     }
 
+
+    public Boolean doesNotExist(Integer plantId){
+        return plantRepository.existsById(plantId);
+    }
+
     // Extra #1
     public List<Plant> getAllAvailablePlants(Integer farmerId) {
         return plantRepository.giveMeAvailablePlants(farmerId);
@@ -79,7 +84,7 @@ public class PlantService {
     }
 
     // Extra #3
-    public void increase(Integer farmerId, Integer plantId, Integer stockAmount) {
+    public void increaseStock(Integer farmerId, Integer plantId, Integer stockAmount) {
         if (stockAmount <= 0) {
             throw new ApiException("Error, stockAmount must be positive");
         }
@@ -108,7 +113,7 @@ public class PlantService {
     }
 
     // Extra #4
-    public void decrease(Integer farmerId, Integer plantId, Integer stockAmount) {
+    public void decreaseStock(Integer farmerId, Integer plantId, Integer stockAmount) {
         if (stockAmount <= 0) {
             throw new ApiException("Error, stockAmount must be positive");
         }
@@ -134,15 +139,7 @@ public class PlantService {
     }
 
     // Extra #5
-
     public List<Plant> getPlantsWithinPriceRange(Integer farmerId, Double min, Double max){
-        List<Plant> plantsWithinRange = new ArrayList<>();
-
-        for (Integer id : plantRepository.giveMePlantsWithinPriceRange(farmerId,min,max)) {
-            plantsWithinRange.add(plantService.getPlant(id));
-        }
-
-        return plantsWithinRange;
-
+        return plantRepository.giveMePlantsWithinPriceRange(farmerId,min,max);
     }
 }

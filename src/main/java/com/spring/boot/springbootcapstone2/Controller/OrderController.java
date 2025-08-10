@@ -59,6 +59,7 @@ public class OrderController {
 
     }
 
+    // Extra #6
     @GetMapping("/filter/pending/{farmerId}")
     public ResponseEntity<?> pendingOrders(@PathVariable Integer farmerId){
         return ResponseEntity.status(HttpStatus.OK).body(orderService.pendingOrders(farmerId));
