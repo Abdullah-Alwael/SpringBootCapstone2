@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class OrderItems {
+public class Items {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +25,6 @@ public class OrderItems {
     @NotNull(message = "orderId should not be empty")
     @Column(columnDefinition = "int not null")
     private Integer orderId;
-
-    @NotNull(message = "purchasePrice should not be empty")
-    @PositiveOrZero(message = "purchasePrice must be positive or zero")
-    @Column(columnDefinition = "double not null")
-    private Double purchasePrice;
 
     @NotNull(message = "quantity should not be empty")
     @Positive(message = "quantity must be positive")

@@ -1,8 +1,8 @@
 package com.spring.boot.springbootcapstone2.Controller;
 
 import com.spring.boot.springbootcapstone2.Api.ApiResponse;
-import com.spring.boot.springbootcapstone2.Model.Orders;
-import com.spring.boot.springbootcapstone2.Service.OrdersService;
+import com.spring.boot.springbootcapstone2.Model.Order;
+import com.spring.boot.springbootcapstone2.Service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,37 +15,37 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/order")
 @RequiredArgsConstructor
-public class OrdersController {
-    private final OrdersService ordersService;
+public class OrderController {
+    private final OrderService orderService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addOrder(@Valid @RequestBody Orders order, Errors errors) {
+    public ResponseEntity<?> addOrder(@Valid @RequestBody Order order, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new
                     ApiResponse(errors.getFieldError().getDefaultMessage()));
         }
 
-        ordersService.addOrder(order);
+        orderService.addOrder(order);
 
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Order added successfully"));
     }
 
 
     @GetMapping("/list")
-    public ResponseEntity<List<Orders>> getOrders() {
-        return ResponseEntity.status(HttpStatus.OK).body(ordersService.getOrders());
+    public ResponseEntity<List<Order>> getOrders() {
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrders());
     }
 
 
     @PutMapping("/update/{orderId}")
     public ResponseEntity<?> updateOrder(@PathVariable Integer orderId,
-                                         @Valid @RequestBody Orders order, Errors errors) {
+                                         @Valid @RequestBody Order order, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new
                     ApiResponse(errors.getFieldError().getDefaultMessage()));
         }
 
-        ordersService.updateOrder(orderId, order);
+        orderService.updateOrder(orderId, order);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Order updated successfully"));
 
     }
@@ -54,13 +54,13 @@ public class OrdersController {
     @DeleteMapping("/delete/{orderId}")
     public ResponseEntity<?> deleteOrder(@PathVariable Integer orderId) {
 
-        ordersService.deleteOrder(orderId);
+        orderService.deleteOrder(orderId);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Order deleted successfully"));
 
     }
 
     @GetMapping("/filter/pending/{farmerId}")
     public ResponseEntity<?> pendingOrders(@PathVariable Integer farmerId){
-        return ResponseEntity.status(HttpStatus.OK).body(ordersService.pendingOrders(farmerId));
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.pendingOrders(farmerId));
     }
 }

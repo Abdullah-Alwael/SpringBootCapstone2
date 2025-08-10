@@ -1,8 +1,8 @@
 package com.spring.boot.springbootcapstone2.Controller;
 
 import com.spring.boot.springbootcapstone2.Api.ApiResponse;
-import com.spring.boot.springbootcapstone2.Model.PlantsStock;
-import com.spring.boot.springbootcapstone2.Service.PlantsStockService;
+import com.spring.boot.springbootcapstone2.Model.PlantStock;
+import com.spring.boot.springbootcapstone2.Service.PlantStockService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,37 +15,37 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/plants-stock")
 @RequiredArgsConstructor
-public class PlantsStockController {
-    private final PlantsStockService plantsStockService;
+public class PlantStockController {
+    private final PlantStockService plantStockService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addPlantStock(@Valid @RequestBody PlantsStock plantStock, Errors errors) {
+    public ResponseEntity<?> addPlantStock(@Valid @RequestBody PlantStock plantStock, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new
                     ApiResponse(errors.getFieldError().getDefaultMessage()));
         }
 
-        plantsStockService.addPlantStock(plantStock);
+        plantStockService.addPlantStock(plantStock);
 
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("PlantStock added successfully"));
     }
 
 
     @GetMapping("/list")
-    public ResponseEntity<List<PlantsStock>> getPlantsStock() {
-        return ResponseEntity.status(HttpStatus.OK).body(plantsStockService.getPlantsStock());
+    public ResponseEntity<List<PlantStock>> getPlantsStock() {
+        return ResponseEntity.status(HttpStatus.OK).body(plantStockService.getPlantsStock());
     }
 
 
     @PutMapping("/update/{plantStockId}")
     public ResponseEntity<?> updatePlantStock(@PathVariable Integer plantStockId,
-                                         @Valid @RequestBody PlantsStock plantStock, Errors errors) {
+                                              @Valid @RequestBody PlantStock plantStock, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new
                     ApiResponse(errors.getFieldError().getDefaultMessage()));
         }
 
-        plantsStockService.updatePlantStock(plantStockId, plantStock);
+        plantStockService.updatePlantStock(plantStockId, plantStock);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("PlantStock updated successfully"));
 
     }
@@ -54,7 +54,7 @@ public class PlantsStockController {
     @DeleteMapping("/delete/{plantStockId}")
     public ResponseEntity<?> deletePlantStock(@PathVariable Integer plantStockId) {
 
-        plantsStockService.deletePlantStock(plantStockId);
+        plantStockService.deletePlantStock(plantStockId);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("PlantStock deleted successfully"));
 
     }
@@ -62,13 +62,13 @@ public class PlantsStockController {
     // Extra #1
     @GetMapping("filter/plants/in-stock/{farmerId}")
     public ResponseEntity<?> getInStockPlants(@PathVariable Integer farmerId){
-        return ResponseEntity.status(HttpStatus.OK).body(plantsStockService.getAllAvailablePlants(farmerId));
+        return ResponseEntity.status(HttpStatus.OK).body(plantStockService.getAllAvailablePlants(farmerId));
     }
 
     // Extra #2
     @GetMapping("filter/plants/out-of-stock/{farmerId}")
     public ResponseEntity<?> getOutOfStockPlants(@PathVariable Integer farmerId){
-        return ResponseEntity.status(HttpStatus.OK).body(plantsStockService.getAllUnavailablePlants(farmerId));
+        return ResponseEntity.status(HttpStatus.OK).body(plantStockService.getAllUnavailablePlants(farmerId));
     }
 
     // Extra #3
@@ -78,7 +78,7 @@ public class PlantsStockController {
             @PathVariable Integer plantId,
             @PathVariable Integer stockAmount){
 
-        plantsStockService.increaseStock(farmerId,plantId,stockAmount);
+        plantStockService.increaseStock(farmerId,plantId,stockAmount);
         return ResponseEntity.status(HttpStatus.OK).body(new
                 ApiResponse("Stock increased by "+stockAmount+" successfully"));
     }
@@ -90,7 +90,7 @@ public class PlantsStockController {
             @PathVariable Integer plantId,
             @PathVariable Integer stockAmount){
 
-        plantsStockService.decreaseStock(farmerId,plantId,stockAmount);
+        plantStockService.decreaseStock(farmerId,plantId,stockAmount);
         return ResponseEntity.status(HttpStatus.OK).body(new
                 ApiResponse("Stock decreased by "+stockAmount+" successfully"));
     }
@@ -102,6 +102,6 @@ public class PlantsStockController {
                                                        @PathVariable Double maxPrice){
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                plantsStockService.getPlantsWithinPriceRange(farmerId,minPrice,maxPrice));
+                plantStockService.getPlantsWithinPriceRange(farmerId,minPrice,maxPrice));
     }
 }

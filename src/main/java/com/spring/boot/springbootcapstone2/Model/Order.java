@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Orders {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,8 +25,9 @@ public class Orders {
 
     @NotEmpty(message = "status should not be empty")
     @Column(columnDefinition = "varchar(30) not null")
-    @Pattern(regexp = "^(pending|confirmed|delivered|canceled)$",
-            message = "must be one of: pending|confirmed|delivered|canceled")
+    @Pattern(regexp = "^(pending)$",
+            message = "must be initially pending")
+    // "^(pending|confirmed|delivered|canceled)$"
     private String status;
 
     @NotNull(message = "buyerId should not be empty")

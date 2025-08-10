@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Plants {
+public class Plant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

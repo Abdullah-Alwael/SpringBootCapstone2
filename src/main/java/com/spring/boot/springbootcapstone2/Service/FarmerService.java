@@ -1,8 +1,8 @@
 package com.spring.boot.springbootcapstone2.Service;
 
 import com.spring.boot.springbootcapstone2.Api.ApiException;
-import com.spring.boot.springbootcapstone2.Model.Farmers;
-import com.spring.boot.springbootcapstone2.Repository.FarmersRepository;
+import com.spring.boot.springbootcapstone2.Model.Farmer;
+import com.spring.boot.springbootcapstone2.Repository.FarmerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +10,19 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FarmersService {
-    private final FarmersRepository farmersRepository;
+public class FarmerService {
+    private final FarmerRepository farmerRepository;
 
-    public void addFarmer(Farmers farmer){
-        farmersRepository.save(farmer);
+    public void addFarmer(Farmer farmer){
+        farmerRepository.save(farmer);
     }
 
-    public List<Farmers> getFarmers(){
-        return farmersRepository.findAll();
+    public List<Farmer> getFarmers(){
+        return farmerRepository.findAll();
     }
 
-    public void updateFarmer(Integer farmerId, Farmers farmer){
-        Farmers oldFarmer = farmersRepository.findFarmersById(farmerId);
+    public void updateFarmer(Integer farmerId, Farmer farmer){
+        Farmer oldFarmer = farmerRepository.findFarmersById(farmerId);
 
         if (oldFarmer == null){
             throw new ApiException("Error, farmer does not exist");
@@ -35,20 +35,20 @@ public class FarmersService {
         oldFarmer.setFarmName(farmer.getFarmName());
         oldFarmer.setLocation(farmer.getLocation());
 
-        farmersRepository.save(oldFarmer);
+        farmerRepository.save(oldFarmer);
     }
 
     public void deleteFarmer(Integer farmerId){
-        Farmers oldFarmer = farmersRepository.findFarmersById(farmerId);
+        Farmer oldFarmer = farmerRepository.findFarmersById(farmerId);
 
         if (oldFarmer == null){
             throw new ApiException("Error, farmer does not exist");
         }
 
-        farmersRepository.delete(oldFarmer);
+        farmerRepository.delete(oldFarmer);
     }
 
     public Boolean doesNotExist(Integer farmerId){
-        return !farmersRepository.existsById(farmerId);
+        return !farmerRepository.existsById(farmerId);
     }
 }

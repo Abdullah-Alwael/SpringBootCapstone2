@@ -1,8 +1,8 @@
 package com.spring.boot.springbootcapstone2.Service;
 
 import com.spring.boot.springbootcapstone2.Api.ApiException;
-import com.spring.boot.springbootcapstone2.Model.Buyers;
-import com.spring.boot.springbootcapstone2.Repository.BuyersRepository;
+import com.spring.boot.springbootcapstone2.Model.Buyer;
+import com.spring.boot.springbootcapstone2.Repository.BuyerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,19 +10,19 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BuyersService {
-    private final BuyersRepository buyersRepository;
+public class BuyerService {
+    private final BuyerRepository buyerRepository;
 
-    public void addBuyer(Buyers buyer){
-        buyersRepository.save(buyer);
+    public void addBuyer(Buyer buyer){
+        buyerRepository.save(buyer);
     }
 
-    public List<Buyers> getBuyers(){
-        return buyersRepository.findAll();
+    public List<Buyer> getBuyers(){
+        return buyerRepository.findAll();
     }
 
-    public void updateBuyer(Integer buyerId, Buyers buyer){
-        Buyers oldBuyer = buyersRepository.findBuyersById(buyerId);
+    public void updateBuyer(Integer buyerId, Buyer buyer){
+        Buyer oldBuyer = buyerRepository.findBuyersById(buyerId);
 
         if (oldBuyer == null){
             throw new ApiException("Error, buyer does not exist");
@@ -33,21 +33,21 @@ public class BuyersService {
         oldBuyer.setPhone(buyer.getPhone());
         oldBuyer.setEmail(buyer.getEmail());
 
-        buyersRepository.save(oldBuyer);
+        buyerRepository.save(oldBuyer);
     }
 
     public void deleteBuyer(Integer buyerId){
-        Buyers oldBuyer = buyersRepository.findBuyersById(buyerId);
+        Buyer oldBuyer = buyerRepository.findBuyersById(buyerId);
 
         if (oldBuyer == null){
             throw new ApiException("Error, buyer does not exist");
         }
 
-       buyersRepository.delete(oldBuyer);
+       buyerRepository.delete(oldBuyer);
     }
 
     public Boolean doesNotExist(Integer buyerId){
-        return !buyersRepository.existsById(buyerId);
+        return !buyerRepository.existsById(buyerId);
     }
 
 }

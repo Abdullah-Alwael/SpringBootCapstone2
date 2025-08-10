@@ -1,9 +1,9 @@
 package com.spring.boot.springbootcapstone2.Service;
 
 import com.spring.boot.springbootcapstone2.Api.ApiException;
-import com.spring.boot.springbootcapstone2.Model.Plants;
-import com.spring.boot.springbootcapstone2.Model.PlantsStock;
-import com.spring.boot.springbootcapstone2.Repository.PlantsStockRepository;
+import com.spring.boot.springbootcapstone2.Model.Plant;
+import com.spring.boot.springbootcapstone2.Model.PlantStock;
+import com.spring.boot.springbootcapstone2.Repository.PlantStockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,40 +12,40 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PlantsStockService {
+public class PlantStockService {
 
-    private final PlantsStockRepository plantStocksRepository;
+    private final PlantStockRepository plantStocksRepository;
 
     // for checking the iDs existence:
-    private final FarmersService farmersService;
-    private final PlantsService plantsService;
+    private final FarmerService farmerService;
+    private final PlantService plantService;
 
-    public void addPlantStock(PlantsStock plantStock) {
-        if (farmersService.doesNotExist(plantStock.getFarmerId())) {
+    public void addPlantStock(PlantStock plantStock) {
+        if (farmerService.doesNotExist(plantStock.getFarmerId())) {
             throw new ApiException("Error, farmer does not exist");
         }
 
-        if (plantsService.doesNotExist(plantStock.getPlantId())) {
+        if (plantService.doesNotExist(plantStock.getPlantId())) {
             throw new ApiException("Error, plant does not exist");
         }
 
         plantStocksRepository.save(plantStock);
     }
 
-    public List<PlantsStock> getPlantsStock() {
+    public List<PlantStock> getPlantsStock() {
         return plantStocksRepository.findAll();
     }
 
-    public void updatePlantStock(Integer plantStockId, PlantsStock plantStock) {
-        if (farmersService.doesNotExist(plantStock.getFarmerId())) {
+    public void updatePlantStock(Integer plantStockId, PlantStock plantStock) {
+        if (farmerService.doesNotExist(plantStock.getFarmerId())) {
             throw new ApiException("Error, farmer does not exist");
         }
 
-        if (plantsService.doesNotExist(plantStock.getPlantId())) {
+        if (plantService.doesNotExist(plantStock.getPlantId())) {
             throw new ApiException("Error, plant does not exist");
         }
 
-        PlantsStock oldPlantStock = plantStocksRepository.findPlantsStockById(plantStockId);
+        PlantStock oldPlantStock = plantStocksRepository.findPlantsStockById(plantStockId);
 
         if (oldPlantStock == null) {
             throw new ApiException("Error, plantStock does not exist");
@@ -60,7 +60,7 @@ public class PlantsStockService {
     }
 
     public void deletePlantStock(Integer plantStockId) {
-        PlantsStock oldPlantStock = plantStocksRepository.findPlantsStockById(plantStockId);
+        PlantStock oldPlantStock = plantStocksRepository.findPlantsStockById(plantStockId);
 
         if (oldPlantStock == null) {
             throw new ApiException("Error, plantStock does not exist");
@@ -70,22 +70,22 @@ public class PlantsStockService {
     }
 
     // Extra #1
-    public List<Plants> getAllAvailablePlants(Integer farmerId) {
-        List<Plants> availablePlants = new ArrayList<>();
+    public List<Plant> getAllAvailablePlants(Integer farmerId) {
+        List<Plant> availablePlants = new ArrayList<>();
 
         for (Integer id : plantStocksRepository.giveMeAvailablePlantIds(farmerId)) {
-            availablePlants.add(plantsService.getPlant(id));
+            availablePlants.add(plantService.getPlant(id));
         }
 
         return availablePlants;
     }
 
     // Extra #2
-    public List<Plants> getAllUnavailablePlants(Integer farmerId) {
-        List<Plants> availablePlants = new ArrayList<>();
+    public List<Plant> getAllUnavailablePlants(Integer farmerId) {
+        List<Plant> availablePlants = new ArrayList<>();
 
         for (Integer id : plantStocksRepository.giveMeUnavailablePlantIds(farmerId)) {
-            availablePlants.add(plantsService.getPlant(id));
+            availablePlants.add(plantService.getPlant(id));
         }
 
         return availablePlants;
@@ -97,15 +97,15 @@ public class PlantsStockService {
             throw new ApiException("Error, stockAmount must be positive");
         }
 
-        if (farmersService.doesNotExist(farmerId)) {
+        if (farmerService.doesNotExist(farmerId)) {
             throw new ApiException("Error, farmer does not exist");
         }
 
-        if (plantsService.doesNotExist(plantId)) {
+        if (plantService.doesNotExist(plantId)) {
             throw new ApiException("Error, plant does not exist");
         }
 
-        PlantsStock oldPlantStock = plantStocksRepository.findPlantsStockByFarmerIdAndPlantId(farmerId, plantId);
+        PlantStock oldPlantStock = plantStocksRepository.findPlantsStockByFarmerIdAndPlantId(farmerId, plantId);
 
         if (oldPlantStock == null) {
             throw new ApiException("Error, plantStock does not exist");
@@ -118,7 +118,7 @@ public class PlantsStockService {
 
     // helper method
     public Boolean stockAvailable(Integer farmerId, Integer plantId, Integer quantity){
-        PlantsStock oldPlantStock = plantStocksRepository.findPlantsStockByFarmerIdAndPlantId(farmerId, plantId);
+        PlantStock oldPlantStock = plantStocksRepository.findPlantsStockByFarmerIdAndPlantId(farmerId, plantId);
 
         return oldPlantStock.getStockQuantity() - quantity >= 0;
     }
@@ -129,15 +129,15 @@ public class PlantsStockService {
             throw new ApiException("Error, stockAmount must be positive");
         }
 
-        if (farmersService.doesNotExist(farmerId)) {
+        if (farmerService.doesNotExist(farmerId)) {
             throw new ApiException("Error, farmer does not exist");
         }
 
-        if (plantsService.doesNotExist(plantId)) {
+        if (plantService.doesNotExist(plantId)) {
             throw new ApiException("Error, plant does not exist");
         }
 
-        PlantsStock oldPlantStock = plantStocksRepository.findPlantsStockByFarmerIdAndPlantId(farmerId, plantId);
+        PlantStock oldPlantStock = plantStocksRepository.findPlantsStockByFarmerIdAndPlantId(farmerId, plantId);
 
         if (oldPlantStock == null) {
             throw new ApiException("Error, plantStock does not exist");
@@ -155,11 +155,11 @@ public class PlantsStockService {
 
     // Extra #5
 
-    public List<Plants> getPlantsWithinPriceRange(Integer farmerId, Double min, Double max){
-        List<Plants> plantsWithinRange = new ArrayList<>();
+    public List<Plant> getPlantsWithinPriceRange(Integer farmerId, Double min, Double max){
+        List<Plant> plantsWithinRange = new ArrayList<>();
 
         for (Integer id :plantStocksRepository.giveMePlantIdsWithinPriceRange(farmerId,min,max)) {
-            plantsWithinRange.add(plantsService.getPlant(id));
+            plantsWithinRange.add(plantService.getPlant(id));
         }
 
         return plantsWithinRange;
