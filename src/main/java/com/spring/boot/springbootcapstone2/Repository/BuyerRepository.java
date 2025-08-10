@@ -1,11 +1,10 @@
 package com.spring.boot.springbootcapstone2.Repository;
 
-import com.spring.boot.springbootcapstone2.Model.Plants;
+import com.spring.boot.springbootcapstone2.Model.Buyer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PlantsRepository extends JpaRepository<Plants, Integer> {
-    Plants findPlantsById(Integer id);
-
+public interface BuyerRepository extends JpaRepository<Buyer, Integer> {
+    Buyer findBuyerById(Integer id);
 }

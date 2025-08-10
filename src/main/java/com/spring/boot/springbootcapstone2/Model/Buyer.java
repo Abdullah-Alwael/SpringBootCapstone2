@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Farmers {
+public class Buyer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,14 +33,6 @@ public class Farmers {
     //email is optional
     @Column(columnDefinition = "varchar(30)")
     private String email;
-
-    @NotEmpty(message = "location should not be empty")
-    @Column(columnDefinition = "varchar(30) not null")
-    private String location;
-
-    @NotEmpty(message = "farmName should not be empty")
-    @Column(columnDefinition = "varchar(30) not null")
-    private String farmName;
 
 
 }

@@ -1,8 +1,8 @@
 package com.spring.boot.springbootcapstone2.Controller;
 
 import com.spring.boot.springbootcapstone2.Api.ApiResponse;
-import com.spring.boot.springbootcapstone2.Model.Farmers;
-import com.spring.boot.springbootcapstone2.Service.FarmersService;
+import com.spring.boot.springbootcapstone2.Model.Farmer;
+import com.spring.boot.springbootcapstone2.Service.FarmerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,37 +15,37 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/farmer")
 @RequiredArgsConstructor
-public class FarmersController {
-    private final FarmersService farmersService;
+public class FarmerController {
+    private final FarmerService farmerService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addFarmer(@Valid @RequestBody Farmers farmer, Errors errors) {
+    public ResponseEntity<?> addFarmer(@Valid @RequestBody Farmer farmer, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new
                     ApiResponse(errors.getFieldError().getDefaultMessage()));
         }
 
-        farmersService.addFarmer(farmer);
+        farmerService.addFarmer(farmer);
 
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Farmer added successfully"));
     }
 
 
     @GetMapping("/list")
-    public ResponseEntity<List<Farmers>> getFarmers() {
-        return ResponseEntity.status(HttpStatus.OK).body(farmersService.getFarmers());
+    public ResponseEntity<List<Farmer>> getFarmers() {
+        return ResponseEntity.status(HttpStatus.OK).body(farmerService.getFarmers());
     }
 
 
     @PutMapping("/update/{farmerId}")
     public ResponseEntity<?> updateFarmer(@PathVariable Integer farmerId,
-                                          @Valid @RequestBody Farmers farmer, Errors errors) {
+                                          @Valid @RequestBody Farmer farmer, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new
                     ApiResponse(errors.getFieldError().getDefaultMessage()));
         }
 
-        farmersService.updateFarmer(farmerId, farmer);
+        farmerService.updateFarmer(farmerId, farmer);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Farmer updated successfully"));
 
     }
@@ -54,7 +54,7 @@ public class FarmersController {
     @DeleteMapping("/delete/{farmerId}")
     public ResponseEntity<?> deleteFarmer(@PathVariable Integer farmerId) {
 
-        farmersService.deleteFarmer(farmerId);
+        farmerService.deleteFarmer(farmerId);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Farmer deleted successfully"));
 
     }
