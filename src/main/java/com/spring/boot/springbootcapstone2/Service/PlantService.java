@@ -6,6 +6,7 @@ import com.spring.boot.springbootcapstone2.Repository.PlantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,42 +15,134 @@ public class PlantService {
 
     private final PlantRepository plantRepository;
 
-    public void addPlant(Plant plant){
+    // for checking farmer existence:
+    private final FarmerService farmerService;
+
+    public void addPlant(Plant plant) {
+        if (farmerService.doesNotExist(plant.getFarmerId())) {
+            throw new ApiException("Error, farmer does not exist");
+        }
+
         plantRepository.save(plant);
     }
 
-    public List<Plant> getPlants(){
+    public List<Plant> getPlants() {
         return plantRepository.findAll();
     }
 
     public Plant getPlant(Integer plantId){
-        return plantRepository.findPlantsById(plantId);
+        return plantRepository.findPlantById(plantId);
     }
 
-    public void updatePlant(Integer plantId, Plant plant){
-        Plant oldPlant = plantRepository.findPlantsById(plantId);
+    public void updatePlant(Integer plantId, Plant plant) {
+        if (farmerService.doesNotExist(plant.getFarmerId())) {
+            throw new ApiException("Error, farmer does not exist");
+        }
 
-        if (oldPlant == null){
+        Plant oldPlant = plantRepository.findPlantById(plantId);
+
+        if (oldPlant == null) {
             throw new ApiException("Error, plant does not exist");
         }
 
         oldPlant.setName(plant.getName());
         oldPlant.setDescription(plant.getDescription());
 
+        oldPlant.setStockQuantity(plant.getStockQuantity());
+
+        // price is not changed for order history ro function correctly, if a farmer wants to increase the price,
+        // they would need to create another new plant with the increased price
+
+        oldPlant.setFarmerId(plant.getFarmerId());
+
         plantRepository.save(oldPlant);
     }
 
-    public void deletePlant(Integer plantId){
-        Plant oldPlant = plantRepository.findPlantsById(plantId);
+    public void deletePlant(Integer plantId) {
+        Plant oldPlant = plantRepository.findPlantById(plantId);
 
-        if (oldPlant == null){
+        if (oldPlant == null) {
             throw new ApiException("Error, plant does not exist");
         }
 
         plantRepository.delete(oldPlant);
     }
 
-    public Boolean doesNotExist(Integer plantId){
-        return !plantRepository.existsById(plantId);
+    // Extra #1
+    public List<Plant> getAllAvailablePlants(Integer farmerId) {
+        return plantRepository.giveMeAvailablePlants(farmerId);
+    }
+
+    // Extra #2
+    public List<Plant> getAllUnavailablePlants(Integer farmerId) {
+        return plantRepository.giveMeUnavailablePlants(farmerId);
+    }
+
+    // Extra #3
+    public void increase(Integer farmerId, Integer plantId, Integer stockAmount) {
+        if (stockAmount <= 0) {
+            throw new ApiException("Error, stockAmount must be positive");
+        }
+
+        if (farmerService.doesNotExist(farmerId)) {
+            throw new ApiException("Error, farmer does not exist");
+        }
+
+        // making sure the farmer is the owner of the plant:
+        Plant oldPlant = plantRepository.findPlantByFarmerIdAndId(farmerId, plantId);
+
+        if (oldPlant == null) {
+            throw new ApiException("Error, plant does not exist");
+        }
+
+        oldPlant.setStockQuantity(oldPlant.getStockQuantity() + stockAmount);
+
+        plantRepository.save(oldPlant);
+    }
+
+    // helper method
+    public Boolean stockAvailable(Integer farmerId, Integer plantId, Integer quantity){
+        Plant oldPlant = plantRepository.findPlantByFarmerIdAndId(farmerId, plantId);
+
+        return oldPlant.getStockQuantity() - quantity >= 0;
+    }
+
+    // Extra #4
+    public void decrease(Integer farmerId, Integer plantId, Integer stockAmount) {
+        if (stockAmount <= 0) {
+            throw new ApiException("Error, stockAmount must be positive");
+        }
+
+        if (farmerService.doesNotExist(farmerId)) {
+            throw new ApiException("Error, farmer does not exist");
+        }
+
+        Plant oldPlant = plantRepository.findPlantByFarmerIdAndId(farmerId, plantId);
+
+        if (oldPlant == null) {
+            throw new ApiException("Error, plant does not exist");
+        }
+
+        if (oldPlant.getStockQuantity() - stockAmount < 0) {
+            throw new ApiException("Error, can not decrease by "+stockAmount+
+                    " insufficient stock: "+ oldPlant.getStockQuantity());
+        }
+
+        oldPlant.setStockQuantity(oldPlant.getStockQuantity() - stockAmount);
+
+        plantRepository.save(oldPlant);
+    }
+
+    // Extra #5
+
+    public List<Plant> getPlantsWithinPriceRange(Integer farmerId, Double min, Double max){
+        List<Plant> plantsWithinRange = new ArrayList<>();
+
+        for (Integer id : plantRepository.giveMePlantsWithinPriceRange(farmerId,min,max)) {
+            plantsWithinRange.add(plantService.getPlant(id));
+        }
+
+        return plantsWithinRange;
+
     }
 }

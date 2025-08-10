@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/plant")
+@RequestMapping("/api/v1/plants-stock")
 @RequiredArgsConstructor
 public class PlantController {
     private final PlantService plantService;
@@ -39,7 +39,7 @@ public class PlantController {
 
     @PutMapping("/update/{plantId}")
     public ResponseEntity<?> updatePlant(@PathVariable Integer plantId,
-                                         @Valid @RequestBody Plant plant, Errors errors) {
+                                              @Valid @RequestBody Plant plant, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new
                     ApiResponse(errors.getFieldError().getDefaultMessage()));
@@ -57,5 +57,51 @@ public class PlantController {
         plantService.deletePlant(plantId);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Plant deleted successfully"));
 
+    }
+
+    // Extra #1
+    @GetMapping("filter/plants/in-stock/{farmerId}")
+    public ResponseEntity<?> getInPlants(@PathVariable Integer farmerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(plantService.getAllAvailablePlants(farmerId));
+    }
+
+    // Extra #2
+    @GetMapping("filter/plants/out-of-stock/{farmerId}")
+    public ResponseEntity<?> getOutOfPlants(@PathVariable Integer farmerId) {
+        return ResponseEntity.status(HttpStatus.OK).body(plantService.getAllUnavailablePlants(farmerId));
+    }
+
+    // Extra #3
+    @PutMapping("/increase-stock/{farmerId}/{plantId}/{stockAmount}")
+    public ResponseEntity<?> increase(
+            @PathVariable Integer farmerId,
+            @PathVariable Integer plantId,
+            @PathVariable Integer stockAmount) {
+
+        plantService.increase(farmerId, plantId, stockAmount);
+        return ResponseEntity.status(HttpStatus.OK).body(new
+                ApiResponse(" increased by " + stockAmount + " successfully"));
+    }
+
+    // Extra #4
+    @PutMapping("/decrease-stock/{farmerId}/{plantId}/{stockAmount}")
+    public ResponseEntity<?> decrease(
+            @PathVariable Integer farmerId,
+            @PathVariable Integer plantId,
+            @PathVariable Integer stockAmount) {
+
+        plantService.decrease(farmerId, plantId, stockAmount);
+        return ResponseEntity.status(HttpStatus.OK).body(new
+                ApiResponse(" decreased by " + stockAmount + " successfully"));
+    }
+
+    // Extra #5
+    @GetMapping("/filter/price/between/{minPrice}/{maxPrice}/{farmerId}")
+    public ResponseEntity<?> getPlantsWithinPriceRange(@PathVariable Integer farmerId,
+                                                       @PathVariable Double minPrice,
+                                                       @PathVariable Double maxPrice) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                plantService.getPlantsWithinPriceRange(farmerId, minPrice, maxPrice));
     }
 }
