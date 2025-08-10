@@ -5,6 +5,7 @@ import com.spring.boot.springbootcapstone2.Model.Item;
 import com.spring.boot.springbootcapstone2.Model.Order;
 import com.spring.boot.springbootcapstone2.Repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +31,9 @@ public class OrderService {
         if (buyerService.doesNotExist(order.getBuyerId())){
             throw new ApiException("Error, buyer does not exist");
         }
+
+        // set the totalPrice to initially be 0
+        order.setTotalPrice(0.0);
 
         orderRepository.save(order);
     }
@@ -82,13 +86,20 @@ public class OrderService {
     }
 
     // item's methods:
-
     public void addItem(Item item){
         if (doesNotExist(item.getOrderId())){
             throw new ApiException("Error, order does not exist");
         }
 
-        itemService.addItem(item);
+        itemService.addItem(item); // it will check for plantId existence
+
+        // update order total price
+        Order order = getOrder(item.getOrderId());
+        order.setTotalPrice(order.getTotalPrice()
+                +plantService.getPlant(item.getPlantId()).getPrice()
+                *item.getQuantity());
+
+        orderRepository.save(order);
     }
 
     public List<Item> getItems(Integer orderId){
@@ -100,10 +111,36 @@ public class OrderService {
             throw new ApiException("Error, order does not exist");
         }
 
+        // update order total price
+        Order order = getOrder(item.getOrderId());
+
+        // remove old price
+        Item oldItem = itemService.getItem(itemId);
+
+        order.setTotalPrice(order.getTotalPrice()
+                -plantService.getPlant(item.getPlantId()).getPrice()
+                *oldItem.getQuantity());
+
         itemService.updateItem(itemId,item);
+
+        // add the new price with new quantity
+        order.setTotalPrice(order.getTotalPrice()
+                +plantService.getPlant(item.getPlantId()).getPrice()
+                *item.getQuantity());
+
     }
 
     public void deleteItem(Integer itemId){
+
+        // update order total price
+        Item item = itemService.getItem(itemId);
+        Order order = getOrder(item.getOrderId());
+
+        // remove old price
+        order.setTotalPrice(order.getTotalPrice()
+                -plantService.getPlant(item.getPlantId()).getPrice()
+                *item.getQuantity());
+
         itemService.deleteItem(itemId);
     }
 
@@ -210,4 +247,17 @@ public class OrderService {
 
         orderRepository.save(order);
     }
+
+    // Extra #10
+    public List<Order> getBuyerOrders(Integer buyerId){
+        return orderRepository.findOrdersByBuyerId(buyerId);
+    }
+
+    // Extra #11
+    public String getFarmerSalesSummary(Integer farmerId){
+        return orderRepository.giveMeSalesSummaryByFarmerId(farmerId);
+    }
+
+    // Extra #12
+
 }

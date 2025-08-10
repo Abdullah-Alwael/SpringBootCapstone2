@@ -133,4 +133,16 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(new
                 ApiResponse("Order marked delivered successfully"));
     }
+
+    // Extra #10
+    @GetMapping("/order-history/{buyerId}")
+    public ResponseEntity<?> getOrderHistory(@PathVariable Integer buyerId){
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getBuyerOrders(buyerId));
+    }
+
+    // Extra #11
+    @GetMapping("/sale-summary/{farmerId}")
+    public ResponseEntity<?> getFarmerSalesSummary(@PathVariable Integer farmerId){
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.getFarmerSalesSummary(farmerId));
+    }
 }

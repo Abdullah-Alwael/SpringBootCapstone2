@@ -38,10 +38,8 @@ public class Order {
     @Column(columnDefinition = "int not null")
     private Integer farmerId;
 
-    @NotNull(message = "totalPrice should not be empty")
-    @PositiveOrZero(message = "totalPrice must be positive or zero")
-    @Column(columnDefinition = "double not null")
+    // handled by the system
+    @Column(columnDefinition = "double not null default 0")
     private Double totalPrice;
-
 
 }

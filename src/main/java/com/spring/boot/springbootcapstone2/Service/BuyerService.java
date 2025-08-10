@@ -2,6 +2,7 @@ package com.spring.boot.springbootcapstone2.Service;
 
 import com.spring.boot.springbootcapstone2.Api.ApiException;
 import com.spring.boot.springbootcapstone2.Model.Buyer;
+import com.spring.boot.springbootcapstone2.Model.Order;
 import com.spring.boot.springbootcapstone2.Repository.BuyerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,5 +50,4 @@ public class BuyerService {
     public Boolean doesNotExist(Integer buyerId){
         return !buyerRepository.existsById(buyerId);
     }
-
 }

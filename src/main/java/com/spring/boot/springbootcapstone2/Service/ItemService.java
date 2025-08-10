@@ -29,6 +29,10 @@ public class ItemService {
         return itemRepository.findItemsByOrderId(orderId);
     }
 
+    public Item getItem(Integer itemId){
+        return itemRepository.findItemById(itemId);
+    }
+
     public void updateItem(Integer itemId, Item item){
         if (plantService.doesNotExist(item.getPlantId())){
             throw new ApiException("Error, plant does not exist");
