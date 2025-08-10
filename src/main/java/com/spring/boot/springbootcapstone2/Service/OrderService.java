@@ -91,10 +91,17 @@ public class OrderService {
             throw new ApiException("Error, order does not exist");
         }
 
+        Order order = getOrder(item.getOrderId());
+
+        // "^(pending|confirmed|delivered|canceled)$"
+        // can not add items to orders that are not pending
+        if (!order.getStatus().equals("pending")){ // "^(pending|confirmed|delivered|canceled)$"
+            throw new ApiException("Error, the order is already "+order.getStatus());
+        }
+
         itemService.addItem(item); // it will check for plantId existence
 
         // update order total price
-        Order order = getOrder(item.getOrderId());
         order.setTotalPrice(order.getTotalPrice()
                 +plantService.getPlant(item.getPlantId()).getPrice()
                 *item.getQuantity());
