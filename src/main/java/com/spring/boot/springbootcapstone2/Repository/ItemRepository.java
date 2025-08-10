@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Integer> {
-    Item findOrderItemsById(Integer id);
+    Item findItemById(Integer id);
 
-    List<Item> findOrderItemsByOrderId(Integer orderId);
+    List<Item> findItemsByOrderId(Integer orderId);
 }

@@ -22,7 +22,7 @@ public class BuyerService {
     }
 
     public void updateBuyer(Integer buyerId, Buyer buyer){
-        Buyer oldBuyer = buyerRepository.findBuyersById(buyerId);
+        Buyer oldBuyer = buyerRepository.findBuyerById(buyerId);
 
         if (oldBuyer == null){
             throw new ApiException("Error, buyer does not exist");
@@ -37,7 +37,7 @@ public class BuyerService {
     }
 
     public void deleteBuyer(Integer buyerId){
-        Buyer oldBuyer = buyerRepository.findBuyersById(buyerId);
+        Buyer oldBuyer = buyerRepository.findBuyerById(buyerId);
 
         if (oldBuyer == null){
             throw new ApiException("Error, buyer does not exist");

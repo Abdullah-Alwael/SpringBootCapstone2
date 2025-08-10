@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FarmerRepository extends JpaRepository<Farmer, Integer> {
-    Farmer findFarmersById(Integer id);
+    Farmer findFarmerById(Integer id);
 }

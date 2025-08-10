@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BuyerRepository extends JpaRepository<Buyer, Integer> {
-    Buyer findBuyersById(Integer id);
+    Buyer findBuyerById(Integer id);
 }

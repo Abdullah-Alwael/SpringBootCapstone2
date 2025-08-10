@@ -22,7 +22,7 @@ public class FarmerService {
     }
 
     public void updateFarmer(Integer farmerId, Farmer farmer){
-        Farmer oldFarmer = farmerRepository.findFarmersById(farmerId);
+        Farmer oldFarmer = farmerRepository.findFarmerById(farmerId);
 
         if (oldFarmer == null){
             throw new ApiException("Error, farmer does not exist");
@@ -39,7 +39,7 @@ public class FarmerService {
     }
 
     public void deleteFarmer(Integer farmerId){
-        Farmer oldFarmer = farmerRepository.findFarmersById(farmerId);
+        Farmer oldFarmer = farmerRepository.findFarmerById(farmerId);
 
         if (oldFarmer == null){
             throw new ApiException("Error, farmer does not exist");
