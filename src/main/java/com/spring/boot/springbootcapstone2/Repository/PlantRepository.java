@@ -21,4 +21,7 @@ public interface PlantRepository extends JpaRepository<Plant, Integer> {
 
     @Query("select p from Plant p where  p.farmerId=?1 and p.price between ?2 and ?3")
     List<Plant> giveMePlantsWithinPriceRange(Integer farmerId, Double min, Double max);
+
+    @Query("select p.farmerId from Plant p where p.name like CONCAT('%', ?1, '%') ")
+    List<Integer> giveMeFarmerIdsSellingPlant(String plantName);
 }

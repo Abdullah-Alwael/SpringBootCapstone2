@@ -1,12 +1,12 @@
 package com.spring.boot.springbootcapstone2.Service;
 
 import com.spring.boot.springbootcapstone2.Api.ApiException;
+import com.spring.boot.springbootcapstone2.Model.Farmer;
 import com.spring.boot.springbootcapstone2.Model.Plant;
 import com.spring.boot.springbootcapstone2.Repository.PlantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,7 +39,7 @@ public class PlantService {
             throw new ApiException("Error, farmer does not exist");
         }
 
-        Plant oldPlant = plantRepository.findPlantById(plantId);
+        Plant oldPlant = getPlant(plantId);
 
         if (oldPlant == null) {
             throw new ApiException("Error, plant does not exist");
@@ -59,7 +59,7 @@ public class PlantService {
     }
 
     public void deletePlant(Integer plantId) {
-        Plant oldPlant = plantRepository.findPlantById(plantId);
+        Plant oldPlant = getPlant(plantId);
 
         if (oldPlant == null) {
             throw new ApiException("Error, plant does not exist");
@@ -141,5 +141,16 @@ public class PlantService {
     // Extra #5
     public List<Plant> getPlantsWithinPriceRange(Integer farmerId, Double min, Double max){
         return plantRepository.giveMePlantsWithinPriceRange(farmerId,min,max);
+    }
+
+    // Extra #13
+    public List<Farmer> getFarmersSellingPlant(Integer plantId){
+        Plant plant = getPlant(plantId);
+
+        if (plant == null){
+            throw new ApiException("Error, plant does not exist");
+        }
+
+        return farmerService.getFarmersByIdIn(plantRepository.giveMeFarmerIdsSellingPlant(plant.getName()));
     }
 }

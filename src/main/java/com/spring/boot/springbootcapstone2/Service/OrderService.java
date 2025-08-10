@@ -5,7 +5,6 @@ import com.spring.boot.springbootcapstone2.Model.Item;
 import com.spring.boot.springbootcapstone2.Model.Order;
 import com.spring.boot.springbootcapstone2.Repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -86,6 +85,7 @@ public class OrderService {
     }
 
     // item's methods:
+    // Extra #14
     public void addItem(Item item){
         if (doesNotExist(item.getOrderId())){
             throw new ApiException("Error, order does not exist");
@@ -113,6 +113,7 @@ public class OrderService {
         return itemService.getItems(orderId);
     }
 
+    // Extra #15
     public void updateItem(Integer itemId, Item item){
         if (doesNotExist(item.getOrderId())){
             throw new ApiException("Error, order does not exist");
@@ -137,6 +138,7 @@ public class OrderService {
 
     }
 
+    // Extra 12
     public void deleteItem(Integer itemId){
 
         // update order total price
@@ -265,6 +267,5 @@ public class OrderService {
         return orderRepository.giveMeSalesSummaryByFarmerId(farmerId);
     }
 
-    // Extra #12
 
 }

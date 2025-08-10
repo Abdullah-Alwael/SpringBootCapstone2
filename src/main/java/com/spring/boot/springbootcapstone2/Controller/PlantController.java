@@ -104,4 +104,10 @@ public class PlantController {
         return ResponseEntity.status(HttpStatus.OK).body(
                 plantService.getPlantsWithinPriceRange(farmerId, minPrice, maxPrice));
     }
+
+    // Extra #13
+    @GetMapping("/similar-sellers/{plantId}")
+    public ResponseEntity<?> getFarmersSellingPlant(@PathVariable Integer plantId){
+        return ResponseEntity.status(HttpStatus.OK).body(plantService.getFarmersSellingPlant(plantId));
+    }
 }

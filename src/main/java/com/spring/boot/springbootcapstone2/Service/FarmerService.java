@@ -21,8 +21,15 @@ public class FarmerService {
         return farmerRepository.findAll();
     }
 
+    public Farmer getFarmer(Integer farmerId){
+        return farmerRepository.findFarmerById(farmerId);
+    }
+
+    public List<Farmer> getFarmersByIdIn(List<Integer> ids){
+        return farmerRepository.findFarmersByIdIn(ids);
+    }
     public void updateFarmer(Integer farmerId, Farmer farmer){
-        Farmer oldFarmer = farmerRepository.findFarmerById(farmerId);
+        Farmer oldFarmer = getFarmer(farmerId);
 
         if (oldFarmer == null){
             throw new ApiException("Error, farmer does not exist");
@@ -39,7 +46,7 @@ public class FarmerService {
     }
 
     public void deleteFarmer(Integer farmerId){
-        Farmer oldFarmer = farmerRepository.findFarmerById(farmerId);
+        Farmer oldFarmer = getFarmer(farmerId);
 
         if (oldFarmer == null){
             throw new ApiException("Error, farmer does not exist");

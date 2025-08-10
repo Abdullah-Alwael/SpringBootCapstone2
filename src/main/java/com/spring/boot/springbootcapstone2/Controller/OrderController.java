@@ -67,6 +67,7 @@ public class OrderController {
     }
 
     // the item contains the orderId
+    // Extra #14
     @PostMapping("/add/item")
     public ResponseEntity<?> addItem(@Valid @RequestBody Item item, Errors errors) {
         if (errors.hasErrors()) {
@@ -85,7 +86,7 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getItems(orderId));
     }
 
-
+    // Extra #15
     @PutMapping("/update/item/{itemId}")
     public ResponseEntity<?> updateItem(@PathVariable Integer itemId,
                                         @Valid @RequestBody Item item, Errors errors) {
@@ -100,6 +101,7 @@ public class OrderController {
     }
 
 
+    // Extra 12
     @DeleteMapping("/delete/item/{itemId}")
     public ResponseEntity<?> deleteItem(@PathVariable Integer itemId) {
 
