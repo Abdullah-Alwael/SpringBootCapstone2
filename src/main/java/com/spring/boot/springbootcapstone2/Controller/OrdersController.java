@@ -58,4 +58,9 @@ public class OrdersController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Order deleted successfully"));
 
     }
+
+    @GetMapping("/filter/pending/{farmerId}")
+    public ResponseEntity<?> pendingOrders(@PathVariable Integer farmerId){
+        return ResponseEntity.status(HttpStatus.OK).body(ordersService.pendingOrders(farmerId));
+    }
 }

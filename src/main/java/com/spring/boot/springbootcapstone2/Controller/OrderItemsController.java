@@ -58,4 +58,20 @@ public class OrderItemsController {
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("OrderItem deleted successfully"));
 
     }
+
+    @PutMapping("/confirm/{orderId}/{farmerId}")
+    public ResponseEntity<?> confirmOrder(@PathVariable Integer orderId, @PathVariable Integer farmerId){
+        orderItemsService.confirmOrder(orderId, farmerId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new
+                ApiResponse("Order confirmed successfully and stock updated"));
+    }
+
+    @PutMapping("/cancel/{orderId}/{farmerId}")
+    public ResponseEntity<?> cancelOrder(@PathVariable Integer orderId, @PathVariable Integer farmerId){
+        orderItemsService.cancelOrder(orderId,farmerId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new
+                ApiResponse("Order canceled successfully and stock updated"));
+    }
 }

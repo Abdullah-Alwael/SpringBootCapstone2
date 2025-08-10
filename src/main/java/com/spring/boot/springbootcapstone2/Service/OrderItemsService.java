@@ -72,11 +72,15 @@ public class OrderItemsService {
     }
 
     // Extra 7
-    public void confirmOrder(Integer orderId){
+    public void confirmOrder(Integer orderId, Integer farmerId){
         if (ordersService.doesNotExist(orderId)){
             throw new ApiException("Error, order does not exist");
         }
         Orders order = ordersService.getOrder(orderId);
+
+        if (!order.getFarmerId().equals(farmerId)){
+            throw new ApiException("Error, the order is not owned by the farmer specified");
+        }
 
         if (!order.getStatus().equals("pending")){
             throw new ApiException("Error, the order is already "+order.getStatus());
@@ -106,11 +110,15 @@ public class OrderItemsService {
     }
 
     // Extra 8
-    public void cancelOrder(Integer orderId){
+    public void cancelOrder(Integer orderId, Integer farmerId){
         if (ordersService.doesNotExist(orderId)){
             throw new ApiException("Error, order does not exist");
         }
         Orders order = ordersService.getOrder(orderId);
+
+        if (!order.getFarmerId().equals(farmerId)){
+            throw new ApiException("Error, the order is not owned by the farmer specified");
+        }
 
         List<OrderItems> orderItemsList = orderItemsRepository.findOrderItemsByOrderId(orderId);
 
