@@ -13,21 +13,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Order {
+public class FarmOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull(message = "date should not be empty")
-    @Column(columnDefinition = "datetime not null")
+    @Column(columnDefinition = "datetime")
     @CreationTimestamp
     private LocalDateTime date;
 
-    @NotEmpty(message = "status should not be empty")
-    @Column(columnDefinition = "varchar(30) not null")
-    @Pattern(regexp = "^(pending)$",
-            message = "must be initially pending")
     // "^(pending|confirmed|delivered|canceled)$"
+    // managed by the system
+    @Column(columnDefinition = "varchar(30) not null")
     private String status;
 
     @NotNull(message = "buyerId should not be empty")
@@ -39,7 +36,7 @@ public class Order {
     private Integer farmerId;
 
     // handled by the system
-    @Column(columnDefinition = "double not null default 0")
+    @Column(columnDefinition = "double not null default 0.0")
     private Double totalPrice;
 
 }

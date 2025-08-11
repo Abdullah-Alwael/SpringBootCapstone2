@@ -24,6 +24,7 @@ public class Buyer {
 
     @NotNull(message = "age must not be empty")
     @Positive(message = "age must be a positive number")
+    @Column(columnDefinition = "int not null")
     private Integer age;
 
     @NotEmpty(message = "phone should not be empty")

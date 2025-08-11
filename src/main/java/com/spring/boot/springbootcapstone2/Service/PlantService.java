@@ -70,7 +70,7 @@ public class PlantService {
 
 
     public Boolean doesNotExist(Integer plantId){
-        return plantRepository.existsById(plantId);
+        return !plantRepository.existsById(plantId);
     }
 
     // Extra #1

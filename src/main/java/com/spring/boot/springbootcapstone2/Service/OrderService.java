@@ -2,7 +2,7 @@ package com.spring.boot.springbootcapstone2.Service;
 
 import com.spring.boot.springbootcapstone2.Api.ApiException;
 import com.spring.boot.springbootcapstone2.Model.Item;
-import com.spring.boot.springbootcapstone2.Model.Order;
+import com.spring.boot.springbootcapstone2.Model.FarmOrder;
 import com.spring.boot.springbootcapstone2.Repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,61 +22,63 @@ public class OrderService {
     private final BuyerService buyerService;
     private final PlantService plantService;
 
-    public void addOrder(Order order){
-        if (farmerService.doesNotExist(order.getFarmerId())){
+    public void addOrder(FarmOrder farmOrder){
+        if (farmerService.doesNotExist(farmOrder.getFarmerId())){
             throw new ApiException("Error, farmer does not exist");
         }
 
-        if (buyerService.doesNotExist(order.getBuyerId())){
+        if (buyerService.doesNotExist(farmOrder.getBuyerId())){
             throw new ApiException("Error, buyer does not exist");
         }
 
         // set the totalPrice to initially be 0
-        order.setTotalPrice(0.0);
+        farmOrder.setTotalPrice(0.0);
+        // "^(pending|confirmed|delivered|canceled)$"
+        farmOrder.setStatus("pending");
 
-        orderRepository.save(order);
+        orderRepository.save(farmOrder);
     }
 
-    public List<Order> getOrders(){
+    public List<FarmOrder> getOrders(){
         return orderRepository.findAll();
     }
 
-    public Order getOrder(Integer orderId){
+    public FarmOrder getOrder(Integer orderId){
         return orderRepository.findOrderById(orderId);
     }
 
-    public void updateOrder(Integer orderId, Order order){
-        if (farmerService.doesNotExist(order.getFarmerId())){
+    public void updateOrder(Integer orderId, FarmOrder farmOrder){
+        if (farmerService.doesNotExist(farmOrder.getFarmerId())){
             throw new ApiException("Error, farmer does not exist");
         }
 
-        if (buyerService.doesNotExist(order.getBuyerId())){
+        if (buyerService.doesNotExist(farmOrder.getBuyerId())){
             throw new ApiException("Error, buyer does not exist");
         }
 
-        Order oldOrder = orderRepository.findOrderById(orderId);
+        FarmOrder oldFarmOrder = orderRepository.findOrderById(orderId);
 
-        if (oldOrder == null){
+        if (oldFarmOrder == null){
             throw new ApiException("Error, order does not exist");
         }
 
-        oldOrder.setStatus(order.getStatus());
-        oldOrder.setTotalPrice(order.getTotalPrice());
-        oldOrder.setDate(order.getDate());
-        oldOrder.setBuyerId(order.getBuyerId());
-        oldOrder.setFarmerId(order.getFarmerId());
+        oldFarmOrder.setStatus(farmOrder.getStatus());
+        oldFarmOrder.setTotalPrice(farmOrder.getTotalPrice());
+        oldFarmOrder.setDate(farmOrder.getDate());
+        oldFarmOrder.setBuyerId(farmOrder.getBuyerId());
+        oldFarmOrder.setFarmerId(farmOrder.getFarmerId());
 
-        orderRepository.save(oldOrder);
+        orderRepository.save(oldFarmOrder);
     }
 
     public void deleteOrder(Integer orderId){
-        Order oldOrder = orderRepository.findOrderById(orderId);
+        FarmOrder oldFarmOrder = orderRepository.findOrderById(orderId);
 
-        if (oldOrder == null){
+        if (oldFarmOrder == null){
             throw new ApiException("Error, order does not exist");
         }
 
-        orderRepository.delete(oldOrder);
+        orderRepository.delete(oldFarmOrder);
     }
 
     // helper method
@@ -91,22 +93,22 @@ public class OrderService {
             throw new ApiException("Error, order does not exist");
         }
 
-        Order order = getOrder(item.getOrderId());
+        FarmOrder farmOrder = getOrder(item.getOrderId());
 
         // "^(pending|confirmed|delivered|canceled)$"
         // can not add items to orders that are not pending
-        if (!order.getStatus().equals("pending")){ // "^(pending|confirmed|delivered|canceled)$"
-            throw new ApiException("Error, the order is already "+order.getStatus());
+        if (!farmOrder.getStatus().equals("pending")){ // "^(pending|confirmed|delivered|canceled)$"
+            throw new ApiException("Error, the order is already "+ farmOrder.getStatus());
         }
 
         itemService.addItem(item); // it will check for plantId existence
 
         // update order total price
-        order.setTotalPrice(order.getTotalPrice()
+        farmOrder.setTotalPrice(farmOrder.getTotalPrice()
                 +plantService.getPlant(item.getPlantId()).getPrice()
                 *item.getQuantity());
 
-        orderRepository.save(order);
+        orderRepository.save(farmOrder);
     }
 
     public List<Item> getItems(Integer orderId){
@@ -120,19 +122,19 @@ public class OrderService {
         }
 
         // update order total price
-        Order order = getOrder(item.getOrderId());
+        FarmOrder farmOrder = getOrder(item.getOrderId());
 
         // remove old price
         Item oldItem = itemService.getItem(itemId);
 
-        order.setTotalPrice(order.getTotalPrice()
+        farmOrder.setTotalPrice(farmOrder.getTotalPrice()
                 -plantService.getPlant(item.getPlantId()).getPrice()
                 *oldItem.getQuantity());
 
         itemService.updateItem(itemId,item);
 
         // add the new price with new quantity
-        order.setTotalPrice(order.getTotalPrice()
+        farmOrder.setTotalPrice(farmOrder.getTotalPrice()
                 +plantService.getPlant(item.getPlantId()).getPrice()
                 *item.getQuantity());
 
@@ -143,10 +145,10 @@ public class OrderService {
 
         // update order total price
         Item item = itemService.getItem(itemId);
-        Order order = getOrder(item.getOrderId());
+        FarmOrder farmOrder = getOrder(item.getOrderId());
 
         // remove old price
-        order.setTotalPrice(order.getTotalPrice()
+        farmOrder.setTotalPrice(farmOrder.getTotalPrice()
                 -plantService.getPlant(item.getPlantId()).getPrice()
                 *item.getQuantity());
 
@@ -154,7 +156,7 @@ public class OrderService {
     }
 
     // Extra #6
-    public List<Order> getPendingOrders(Integer farmerId){
+    public List<FarmOrder> getPendingOrders(Integer farmerId){
         return orderRepository.findOrdersByStatusEqualsAndFarmerId("pending", farmerId);
     }
 
@@ -164,21 +166,21 @@ public class OrderService {
             throw new ApiException("Error, order does not exist");
         }
 
-        Order order = getOrder(orderId);
+        FarmOrder farmOrder = getOrder(orderId);
 
-        if (!order.getFarmerId().equals(farmerId)){
+        if (!farmOrder.getFarmerId().equals(farmerId)){
             throw new ApiException("Error, the order is not owned by the farmer specified");
         }
 
-        if (!order.getStatus().equals("pending")){ // "^(pending|confirmed|delivered|canceled)$"
-            throw new ApiException("Error, the order is already "+order.getStatus());
+        if (!farmOrder.getStatus().equals("pending")){ // "^(pending|confirmed|delivered|canceled)$"
+            throw new ApiException("Error, the order is already "+ farmOrder.getStatus());
         }
 
         // check if possible to decrease all items stock
         List<Item> itemList = itemService.getItems(orderId);
 
         for (Item item : itemList){ // check if any stock is unavailable
-            if (!plantService.stockAvailable(order.getFarmerId(),
+            if (!plantService.stockAvailable(farmOrder.getFarmerId(),
                     item.getPlantId(),
                     item.getQuantity())){
                 throw new ApiException("Error, stock unavailable for "+
@@ -188,14 +190,14 @@ public class OrderService {
         }
 
         for (Item item : itemList){ // decrease the stock
-            plantService.decreaseStock(order.getFarmerId(),
+            plantService.decreaseStock(farmOrder.getFarmerId(),
                     item.getPlantId(),
                     item.getQuantity());
         }
 
-        order.setStatus("confirmed");
+        farmOrder.setStatus("confirmed");
 
-        orderRepository.save(order);
+        orderRepository.save(farmOrder);
 
     }
 
@@ -205,30 +207,30 @@ public class OrderService {
             throw new ApiException("Error, order does not exist");
         }
 
-        Order order = getOrder(orderId);
+        FarmOrder farmOrder = getOrder(orderId);
 
-        if (!order.getFarmerId().equals(farmerId)){
+        if (!farmOrder.getFarmerId().equals(farmerId)){
             throw new ApiException("Error, the order is not owned by the farmer specified");
         }
 
         // "^(pending|confirmed|delivered|canceled)$"
-        if (order.getStatus().equals("canceled")){
+        if (farmOrder.getStatus().equals("canceled")){
             throw new ApiException("Error, the order is already canceled");
         }
 
-        if (!order.getStatus().equals("pending")){
+        if (!farmOrder.getStatus().equals("pending")){
             throw new ApiException("Error, can not cancel an order with status other than pending");
         }
 
         for (Item item : itemService.getItems(orderId)){ // increase the stock
-            plantService.increaseStock(order.getFarmerId(),
+            plantService.increaseStock(farmOrder.getFarmerId(),
                     item.getPlantId(),
                     item.getQuantity());
         }
 
-        order.setStatus("canceled");
+        farmOrder.setStatus("canceled");
 
-        orderRepository.save(order);
+        orderRepository.save(farmOrder);
 
     }
 
@@ -237,28 +239,28 @@ public class OrderService {
         if (doesNotExist(orderId)){
             throw new ApiException("Error, order does not exist");
         }
-        Order order = getOrder(orderId);
+        FarmOrder farmOrder = getOrder(orderId);
 
-        if (!order.getFarmerId().equals(farmerId)){
+        if (!farmOrder.getFarmerId().equals(farmerId)){
             throw new ApiException("Error, the order is not owned by the farmer specified");
         }
 
         // "^(pending|confirmed|delivered|canceled)$"
-        if (order.getStatus().equals("delivered")){
+        if (farmOrder.getStatus().equals("delivered")){
             throw new ApiException("Error, the order is already delivered");
         }
 
-        if (!order.getStatus().equals("confirmed")){
+        if (!farmOrder.getStatus().equals("confirmed")){
             throw new ApiException("Error, the order is not yet confirmed");
         }
 
-        order.setStatus("delivered");
+        farmOrder.setStatus("delivered");
 
-        orderRepository.save(order);
+        orderRepository.save(farmOrder);
     }
 
     // Extra #10
-    public List<Order> getBuyerOrders(Integer buyerId){
+    public List<FarmOrder> getBuyerOrders(Integer buyerId){
         return orderRepository.findOrdersByBuyerId(buyerId);
     }
 

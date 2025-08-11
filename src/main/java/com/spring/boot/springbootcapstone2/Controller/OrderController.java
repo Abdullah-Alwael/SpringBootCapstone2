@@ -2,7 +2,7 @@ package com.spring.boot.springbootcapstone2.Controller;
 
 import com.spring.boot.springbootcapstone2.Api.ApiResponse;
 import com.spring.boot.springbootcapstone2.Model.Item;
-import com.spring.boot.springbootcapstone2.Model.Order;
+import com.spring.boot.springbootcapstone2.Model.FarmOrder;
 import com.spring.boot.springbootcapstone2.Service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,33 +20,33 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> addOrder(@Valid @RequestBody Order order, Errors errors) {
+    public ResponseEntity<?> addOrder(@Valid @RequestBody FarmOrder farmOrder, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new
                     ApiResponse(errors.getFieldError().getDefaultMessage()));
         }
 
-        orderService.addOrder(order);
+        orderService.addOrder(farmOrder);
 
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Order added successfully"));
     }
 
 
     @GetMapping("/list")
-    public ResponseEntity<List<Order>> getOrders() {
+    public ResponseEntity<List<FarmOrder>> getOrders() {
         return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrders());
     }
 
 
     @PutMapping("/update/{orderId}")
     public ResponseEntity<?> updateOrder(@PathVariable Integer orderId,
-                                         @Valid @RequestBody Order order, Errors errors) {
+                                         @Valid @RequestBody FarmOrder farmOrder, Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new
                     ApiResponse(errors.getFieldError().getDefaultMessage()));
         }
 
-        orderService.updateOrder(orderId, order);
+        orderService.updateOrder(orderId, farmOrder);
         return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Order updated successfully"));
 
     }
